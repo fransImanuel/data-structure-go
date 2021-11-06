@@ -25,14 +25,12 @@ func (l *LinkedList) InsertPushFront(input int) {
 	}
 
 	temp := l.head
-	for temp != nil {
+	//ceritanya kan pengen nge loop sampe ke node terakhir buat inisialisasi tail
+	for temp.next != nil {
 		temp = temp.next
 	}
 	l.tail = temp
 	l.length++
-
-	fmt.Printf("\nHead : %v", l.head)
-	fmt.Printf("\nTail : %v", l.tail)
 }
 
 func (l *LinkedList) InsertPushBack(input int) {
@@ -41,12 +39,25 @@ func (l *LinkedList) InsertPushBack(input int) {
 	}
 	if l.head == nil {
 		l.head = n
+		l.tail = n
 	} else {
-		fmt.Println(l.tail.data)
 		l.tail.next = n
 		l.tail = n
 	}
 	l.length++
+}
+
+func (l *LinkedList) PopFront() {
+	l.head = l.head.next
+}
+
+func (l *LinkedList) PopBack() {
+	temp := l.head
+	for temp.next != l.tail {
+		temp = temp.next
+	}
+	l.tail = temp
+	l.tail.next = nil
 }
 
 func (l *LinkedList) PrintAll() {
@@ -55,17 +66,26 @@ func (l *LinkedList) PrintAll() {
 		fmt.Printf("%d --> ", temp.data)
 		temp = temp.next
 	}
+	fmt.Printf("\n")
 }
 
 func main() {
 	list := &LinkedList{}
-	list.InsertPushFront(1)
-	list.InsertPushFront(2)
-	// fmt.Println(list)
-	// fmt.Println(list.head.data)
-	// fmt.Println(list.head.next.data)
+	list.InsertPushFront(3)
+	list.InsertPushFront(4)
 	list.PrintAll()
-	// list.InsertPushBack(3)
-	// list.PrintAll()
-	// fmt.Println(list)
+
+	list.InsertPushBack(1)
+	list.PrintAll()
+
+	list.PopFront()
+	list.PrintAll()
+
+	list.InsertPushFront(5)
+	list.InsertPushFront(6)
+	list.PrintAll()
+
+	// list.PopBack()
+	list.PopBack()
+	list.PrintAll()
 }
