@@ -5,7 +5,7 @@ import "fmt"
 const ArraySize = 7
 
 type HashTable struct {
-	array [ArraySize]*Bucket
+	Array [ArraySize]*Bucket
 }
 
 type Bucket struct {
@@ -17,36 +17,22 @@ type Node struct {
 	next *Node
 }
 
-//Init HashTable
-func InitHashTable() *HashTable {
-	hashT := &HashTable{}
-	for i := range hashT.array {
-		hashT.array[i] = &Bucket{}
-	}
-	return hashT
-}
-
 func (h *HashTable) Insert(key string) {
 	index := Hash(key)
-	h.array[index].Insert(key)
+	h.Array[index].Insert(key)
 }
 
-func (h *HashTable) Search(key string) bool {
+func (h *HashTable) Search(key string) {
 	index := Hash(key)
-	return h.array[index].Search(key)
+	h.Array[index].Search(key)
 }
 
 func (h *HashTable) Delete(key string) {
 	index := Hash(key)
-	h.array[index].Delete(key)
+	h.Array[index].Delete(key)
 }
 
-//Insert Bucket
 func (b *Bucket) Insert(key string) {
-	if b.Search(key) {
-		fmt.Println("already exist")
-		return
-	}
 	newNode := &Node{key: key}
 	if b.head == nil {
 		b.head = newNode
@@ -56,47 +42,49 @@ func (b *Bucket) Insert(key string) {
 	}
 }
 
-//Search Bucket
 func (b *Bucket) Search(key string) bool {
-	traverse := b.head
-	for traverse != nil {
-		if traverse.key == key {
+	temp := b.head
+	for temp != nil {
+		if temp.key == key {
 			return true
 		}
-		traverse = traverse.next
+		temp = temp.next
 	}
 	return false
 }
 
-//Delete Bucket
 func (b *Bucket) Delete(key string) {
 	if b.head.key == key {
 		b.head = b.head.next
 	}
 
-	traverse := b.head
-	for traverse.next != nil {
-		if traverse.next.key == key {
-			traverse.next = traverse.next.next
+	temp := b.head
+	for temp.next != nil {
+		if temp.next.key == key {
+			temp.next = temp.next.next
+			return
 		}
-		traverse = traverse.next
+		temp = temp.next
 	}
 }
 
-func Hash(w string) int {
+func Hash(key string) int {
 	sum := 0
-
-	for _, i := range w {
-		fmt.Println(i)
-		sum += int(i)
+	for _, k := range key {
+		sum += int(k)
 	}
-
 	return sum % ArraySize
 }
 
+func InitHashTable() *HashTable {
+	init := &HashTable{}
+	for i := 0; i < ArraySize; i++ {
+		init.Array[i] = &Bucket{}
+	}
+	return init
+}
+
 func main() {
-	// hashT := InitHashTable()
-	// fmt.Println(hashT)
 
 	list := []string{
 		"ERIC", "KENNY", "KYLE", "STAN", "RANDY", "BUTTERS", "TOKEN",
@@ -107,4 +95,6 @@ func main() {
 	for _, v := range list {
 		testBucket.Insert(v)
 	}
+
+	fmt.Println(testBucket)
 }
